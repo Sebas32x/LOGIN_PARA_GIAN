@@ -1,0 +1,141 @@
+<?php
+// --- CONFIGURACIÓN DE CONEXIÓN ---
+$host = "localhost";
+$user = "root";   // usuario por defecto en XAMPP
+$pass = "";       // contraseña vacía por defecto
+$db   = "empresa";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
+
+// --- ALTA ---
+if (isset($_POST['accion']) && $_POST['accion'] == 'alta') {
+    $stmt = $conn->prepare("INSERT INTO clientes (nombre, email, telefono) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $_POST['nombre'], $_POST['email'], $_POST['telefono']);
+    $stmt->execute();
+    header("Location: abm_clientes.php");
+    exit;
+}
+
+// --- MODIFICACIÓN ---
+if (isset($_POST['accion']) && $_POST['accion'] == 'editar') {
+    $stmt = $conn->prepare("UPDATE clientes SET nombre=?, email=?, telefono=? WHERE id=?");
+    $stmt->bind_param("sssi", $_POST['nombre'], $_POST['email'], $_POST['telefono'], $_POST['id']);
+    $stmt->execute();
+    header("Location: abm_clientes.php");
+    exit;
+}
+
+// --- BAJA ---
+if (isset($_GET['borrar'])) {
+    $id = intval($_GET['borrar']);
+    $stmt = $conn->prepare("DELETE FROM clientes WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    header("Location: abm_clientes.php");
+    exit;
+}
+
+// --- OBTENER LISTADO ---
+$result = $conn->query("SELECT * FROM clientes");
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ABM Clientes</title>
+</head>
+<body>
+    <h1>ABM Clientes</h1>
+
+    <!-- FORMULARIO DE ALTA -->
+    <h2>Agregar Cliente</h2>
+    <form method="post">
+        <input type="hidden" name="accion" value="alta">
+        Nombre: <input type="text" name="nombre" required><br>
+        Email: <input type="email" name="email" required><br>
+        Teléfono: <input type="text" name="telefono"><br>
+        <input type="submit" value="Guardar">
+    </form>
+
+    <!-- LISTADO -->
+    <h2>Listado</h2>
+    <table border="1" cellpadding="5">
+        <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
+        <?php while($row = $result->fetch_assoc()){ ?>
+        <tr>
+            <td><?= $row['id'] ?></td>
+            <td><?= $row['nombre'] ?></td>
+            <td><?= $row['email'] ?></td>
+            <td><?= $row['telefono'] ?></td>
+            <td>
+                <!-- FORMULARIO DE EDICIÓN EN LÍNEA -->
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="accion" value="editar">
+                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    Nombre: <input type="text" name="nombre" value="<?= $row['nombre'] ?>">
+                    Email: <input type="text" name="email" value="<?= $row['email'] ?>">
+                    Teléfono: <input type="text" name="telefono" value="<?= $row['telefono'] ?>">
+                    <input type="submit" value="Actualizar">
+                </form>
+                |
+                <a href="abm_clientes.php?borrar=<?= $row['id'] ?>" onclick="return confirm('¿Seguro que deseas borrar este cliente?');">Borrar</a>
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
+</body>
+</html>
+
+
+
+########################################
+
+
+<?php
+// --- VARIABLES Y CADENAS ---
+$nombre = "Seba";
+$mensaje = "Hola, " . $nombre . "! Bienvenido a PHP.";
+echo $mensaje . "<br>";
+
+// --- FUNCIONES ---
+function sumar($a, $b) {
+    return $a + $b;
+}
+echo "La suma de 5 + 3 es: " . sumar(5, 3) . "<br>";
+
+// --- ARRAYS ---
+$frutas = ["Manzana", "Banana", "Naranja"];
+echo "Primera fruta: " . $frutas[0] . "<br>";
+
+// Recorrer array con foreach
+foreach ($frutas as $f) {
+    echo "Fruta: $f <br>";
+}
+
+// --- CONDICIONALES ---
+$edad = 20;
+if ($edad >= 18) {
+    echo "Eres mayor de edad.<br>";
+} else {
+    echo "Eres menor de edad.<br>";
+}
+
+// --- BUCLES ---
+echo "Contador con for:<br>";
+for ($i = 1; $i <= 5; $i++) {
+    echo "Número: $i <br>";
+}
+
+// --- MANIPULACIÓN DE CADENAS ---
+$texto = "PHP es divertido";
+echo "Longitud: " . strlen($texto) . "<br>";
+echo "En mayúsculas: " . strtoupper($texto) . "<br>";
+echo "Reemplazo: " . str_replace("divertido", "poderoso", $texto) . "<br>";
+
+// --- FUNCIONES ANÓNIMAS ---
+$doble = function($n) { return $n * 2; };
+echo "El doble de 7 es: " . $doble(7) . "<br>";
+?>

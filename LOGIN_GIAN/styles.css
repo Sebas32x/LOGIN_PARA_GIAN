@@ -1,0 +1,52 @@
+body{
+
+    background-image: url;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;    justify-content: center;
+    align-items: center;    height: 100vh;
+}
+.contenedor{
+   height: 100vh; /* Ocupa toda la altura de la pantalla */
+   background-image: url('fondo.jpg'); /* Ruta de la imagen */
+   background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+   background-position: center; /* Centra la imagen */
+   background-repeat: no-repeat; /* Evita que se repita */
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: white;
+   text-align: center;
+}
+.login-container {
+    width: 25%; min-width: 210;
+    background-color: gray;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+label {    
+    display: block;   
+    margin-bottom: 5px;
+}
+
+input{
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {    
+    width: 100%;
+    padding: 10px;
+    background-color: #5cb85c;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
